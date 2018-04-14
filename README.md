@@ -1,0 +1,1 @@
+# provisioning_ec2_rhel7_workplace
