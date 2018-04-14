@@ -7,9 +7,9 @@ $ ansible-playbook ./my_workspace.yml -i inventory.ini
 ```
 で開始。
 
-###その前にやっておくこと
+### その前にやっておくこと
 
- #### 【1/2】ssh接続の各種設定
+#### 【1/2】ssh接続の各種設定
  
  `ansible.cfg` ファイルの記述を補完すること
 ```
@@ -17,7 +17,7 @@ $ ansible-playbook ./my_workspace.yml -i inventory.ini
 ssh_args = -F (ssh接続のコンフィグファイルを指定)
 ```
 
- #### 【2/2】操作先ホストの指定
+#### 【2/2】操作先ホストの指定
  
 以下のような内容で `inventory.ini` ファイルを作成すること
 ```
