@@ -1,0 +1,28 @@
+#- name: "Prepare RVM"
+#  command: "/usr/bin/gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3"
+- name: "Download RVM Installer"
+  # shell: '/usr/bin/curl -sSL https://get.rvm.io | bash -s stable --ruby >/dev/null 2>&1'
+  get_url:
+    url: https://get.rvm.io
+    dest: '/tmp/rvm-installer.sh'
+    mode: 0755
+- name: "Install RVM"
+  command: "/tmp/rvm-installer.sh"
+
+- name: "Add RVM to PATH"
+  shell: "source /etc/profile.d/rvm.sh"
+
+- name: "Add group for RVM"
+  command: "/usr/sbin/usermod -a -G rvm root"
+#- name: "Add group for RVM"
+#  command: "/usr/sbin/usermod -a -G rvm {{ admin_user_name }}"
+- name: "Add group for RVM"
+  command: "/usr/sbin/usermod -a -G rvm {{ app_user_name }}"
+
+- name: "Install ruby-{{ ruby_version_25 }}"
+  command: "/bin/bash -l -c \"rvm_rubygems_version={{ gem_version_27 }} /usr/local/rvm/bin/rvm install ruby-{{ ruby_version_25 }} --disable-binary && /usr/local/rvm/bin/rvm --default ruby-{{ ruby_version_25 }}\""
+- name: "Install bundler {{ ruby_version_25 }}"
+  #sudo: no
+  environment:
+    PATH: "{{ gem_27_path }}:{{ rvm_25_path }}:{{ ansible_env.PATH }}"
+  command: "gem install bundler --no-ri --no-rdoc"

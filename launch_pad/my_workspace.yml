@@ -1,0 +1,12 @@
+- hosts: my_workspace
+  become: yes
+  vars_files:
+    - ../group_vars/project.yml
+
+  roles:
+    - common
+    - devel
+    - node
+    - php
+    - ruby
+    - httpd

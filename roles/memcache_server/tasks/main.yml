@@ -1,0 +1,8 @@
+- name: install memcached
+  yum: name=memcached
+
+# - name: restart memcached.service
+#   systemd:
+#     name: memcached
+#     state: started
+#     daemon_reload: yes

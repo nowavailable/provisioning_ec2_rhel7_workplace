@@ -1,0 +1,9 @@
+app_user_name: "appuser"
+#admin_user_name: "admin"
+
+ruby_version_25: "2.5.1"
+rvm_25_path: "/usr/local/rvm/gems/ruby-{{ ruby_version_25 }}/bin:/usr/local/rvm/gems/ruby-{{ ruby_version_25 }}@global/bin:/usr/local/rvm/rubies/ruby-{{ ruby_version_25 }}/bin:/usr/local/rvm/bin"
+gem_version_27: "2.7.6"
+gem_27_path: "/usr/local/rvm/rubies/ruby-{{ ruby_version_25 }}/bin"
+rvm_path: "/usr/local/rvm/bin"
+passenger_version: "5.2.3"

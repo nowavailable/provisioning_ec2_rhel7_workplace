@@ -1,0 +1,14 @@
+- name: add 10gen repos
+  copy:
+    src: 10gen.repo
+    dest: /etc/yum.repos.d/10gen.repo
+
+- name: install mongo
+  yum: name={{ item }} enablerepo=10gen
+  with_items:
+    - mongo-10gen
+    - mongo-10gen-server
+- name: mkdir datadir
+  command: "mkdir -p /data/db"
+# systemd 起動設定（.serviceファイル）
+

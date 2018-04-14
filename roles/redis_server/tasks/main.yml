@@ -1,0 +1,10 @@
+- name: install redis
+  yum: name=redis enablerepo=epel
+
+# - name: restart redis.service
+#   systemd:
+#     name: redis
+#     state: started
+#     daemon_reload: yes
+- name: chkconfig redis on
+  command: "chkconfig redis on"

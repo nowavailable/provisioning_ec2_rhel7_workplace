@@ -1,0 +1,142 @@
+# 
+# native libraries
+#
+- name: "Install system libraries"
+  yum: name={{ item }} state=present
+  with_items:
+    - gcc
+    - gcc-c++
+    - make
+    - patch
+    - readline
+    - zlib
+    - rpm-build
+    - yum-utils
+    - zsh
+    - readline-devel
+    - openssl-devel
+    - curl-devel
+    - zlib-devel
+    - httpd-devel
+    - autoconf
+    - libselinux-devel
+    #- gpm-devel
+
+- name: bash-completion
+  yum: name=bash-completion enablerepo=epel
+
+#- name: libtermcap-devel
+#  yum: name=libtermcap-devel
+#- name: libacl-devel
+#  yum: name=libacl-devel
+#- name: gtk2-devel
+#  yum: name=gtk2-devel
+#- name: libSM-devel
+#  yum: name=libSM-devel
+#- name: libXt-devel
+#  yum: name=libXt-devel
+#- name: libXpm-devel
+#  yum: name=libXpm-devel
+
+- name: "Install languages"
+  yum: name={{ item }} state=present
+  with_items:
+    #- lua-devel
+    - python-devel
+    - perl-devel
+
+- name: "Install ImageMagick"
+  yum: name={{ item }} state=present
+  with_items:
+    - ImageMagick
+    #- ImageMagick-devel
+    - ImageMagick-c++
+    #- ImageMagick-c++-devel
+
+- name: "Install ffi"
+  yum: name={{ item }} state=present
+  with_items:
+    - libffi
+    - libffi-devel
+
+- name: "Install libxml2"
+  yum: name={{ item }} state=present
+  with_items:
+    - libxml2
+    - libxml2-devel
+    - libxslt
+    - libxslt-devel
+- name: install libyaml
+  yum: enablerepo=epel name=libyaml
+#- name: install libyaml-devel
+#  yum: enablerepo=epel name=libyaml-devel
+
+#- name: install libidn-devel
+#  yum: enablerepo=epel name=libidn-devel
+
+#- name: "Install tcl/tk"
+#  yum: name={{ item }} state=present
+#  with_items:
+#    - tcl
+#    - tk
+
+#- name: "Install asciidoc"
+#  yum: name={{ item }} state=present
+#  with_items:
+#    - xmlto
+#    - expect
+#    # 不整合が起こる。パッケージ boost-devel が壊れているせい？
+#    # - asciidoc
+
+- name: "Install GD"
+  yum: name={{ item }} state=present enablerepo=epel
+  with_items:
+    - gd
+    #- gd-devel
+    - graphviz
+    #- graphviz-devel
+    #- graphviz-gd
+
+#- name: "Install poppler"
+#  yum: name={{ item }} state=present
+#  with_items:
+#    - poppler-utils
+#    - poppler-glib-devel
+
+#- name: "For FTP Batch"
+#  yum: name={{ item }} state=present
+#  with_items:
+#    - ftp
+#    # - nkf
+
+#
+# MySQL
+#
+- name: setup mysql yum repo
+  yum:
+    name: http://dev.mysql.com/get/mysql57-community-release-el7-8.noarch.rpm
+    validate_certs: no
+#- name: setup mysql yum repo
+#  command: "/usr/bin/yum-config-manager --enable mysql56-community"
+#- name: setup mysql yum repo
+#  command: "/usr/bin/yum-config-manager --disable mysql57-community"
+- name: setup mysql yum repo
+  command: "/usr/bin/yum-config-manager --enable mysql57-community"
+#- name: install mysql-community-common
+#  yum:
+#    enablerepo: mysql56-community
+#    name: mysql-community-common-5.6.37
+#- name: install mysql-community-client
+#  yum:
+#    enablerepo: mysql56-community
+#    name: mysql-community-client-5.6.37
+#- name: install mysql-community-devel
+#  yum:
+#    enablerepo: mysql56-community
+#    name: mysql-community-devel-5.6.37
+- name: install mysql
+  yum: name={{ item }} state=present enablerepo=mysql57-community
+  with_items:
+    - mysql-community-common
+    - mysql-community-client
+    - mysql-community-devel

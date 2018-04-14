@@ -1,0 +1,52 @@
+- name: yum update
+  yum: name=* state=latest
+
+- name: Importing GPG key
+  rpm_key:
+    key: /etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-7
+
+- name: setup epel
+  yum:
+    name: http://dl.fedoraproject.org/pub/epel/7/x86_64/Packages/e/epel-release-7-11.noarch.rpm
+    validate_certs: no
+- name: yum update
+  yum: name=* state=latest
+
+- name: install setuptool
+  yum: name=setuptool
+- name: install ntsysv
+  yum: name=ntsysv
+# 所在不明
+#- name: install system-config-firewall-tui
+#  yum: name=system-config-firewall-tui
+# - name: install system-config-network-tui
+#   yum: name=system-config-network-tui
+
+- name: "Install utility-tools"
+  yum: name={{ item }} state=present
+  with_items:
+    - git
+    #- sudo
+    #- which
+    #- less
+    - tree
+    - wget
+    #- curl
+    - telnet
+    #- crontabs
+    - psmisc
+    #- lsyncd
+    - bind-utils
+
+#
+# add user
+#
+
+#- user:
+#    name: "{{ admin_user_name }}"
+#    comment: "System administrator"
+#    group: adm
+- user:
+    name: "{{ app_user_name }}"
+    comment: "Application User"
+    group: wheel

@@ -1,0 +1,41 @@
+#
+# MySQL
+#
+- name: setup mysql yum repo
+  yum:
+    name: http://dev.mysql.com/get/mysql57-community-release-el7-8.noarch.rpm
+    validate_certs: no
+- name: setup mysql yum repo
+  command: "/usr/bin/yum-config-manager --enable mysql56-community"
+- name: setup mysql yum repo
+  command: "/usr/bin/yum-config-manager --disable mysql57-community"
+
+# yum install --enablerepo=mysql56-community mysql-community-server-5.6.35
+- name: install mysql-community-server
+  yum:
+    enablerepo: mysql56-community
+    name: mysql-community-server-5.6.37
+
+# TODO: cnfファイル 文字コード、絵文字
+
+# TODO: cnfファイル タイムゾーン
+
+# TODO: cnfファイル ファイルアクセス権限
+
+# TODO: cnfファイル 各種バッファサイズ
+
+# TODO: cnfファイル 接続認証認可（レプリケーション含む）
+
+# TODO: cnfファイル 全文検索インデックス用
+
+# TODO: cnfファイル テーブルパーティショニングの上限とか
+
+# 環境変数
+
+# db初期化。そしてcreate databaseも？
+
+# - name: restart mysqld.service
+#   systemd:
+#     name: mysqld
+#     state: started
+#     daemon_reload: yes
