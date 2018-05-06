@@ -1,9 +1,9 @@
 - name: yum update
   yum: name=* state=latest
 
-- name: Importing GPG key
-  rpm_key:
-    key: /etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-7
+#- name: Importing GPG key
+#  rpm_key:
+#    key: /etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-7
 
 - name: setup epel
   yum:
@@ -26,16 +26,16 @@
   yum: name={{ item }} state=present
   with_items:
     - git
-    #- sudo
-    #- which
-    #- less
+    - sudo
+    - which
+    - less
     - tree
     - wget
-    #- curl
+    - curl
     - telnet
-    #- crontabs
+    - crontabs
     - psmisc
-    #- lsyncd
+    - lsyncd
     - bind-utils
 
 #
@@ -50,3 +50,8 @@
     name: "{{ app_user_name }}"
     comment: "Application User"
     group: wheel
+- user:
+    name: "{{ app_user_name }}"
+    update_password: always
+    password: "{{ '平文パスワード'|password_hash('sha512') }}"
+

@@ -1,0 +1,63 @@
+#- user:
+#    name: "git"
+#    comment: "Git User"
+#- name: "Add group for git"
+#  command: "/usr/sbin/usermod -a -G git {{ app_user_name }}"
+#- name: "chmod git home directory"
+#  become: yes
+#  file:
+#    path: "/home/git"
+#    mode: 0750
+- name: "mkdir .ssh"
+  become_user: "{{ app_user_name }}"
+  file:
+    path: ".ssh"
+    state: directory
+    mode: 0700
+- name: "touch authorized_keys"
+  become_user: git
+  file:
+    path: ".ssh/authorized_keys"
+    state: touch
+    mode: 0600
+- name: copy publickey
+  copy: src={{ public_key_file_name }} dest=/home/{{ app_user_name }}/.ssh/authorized_keys
+
+- name: "copy rails-app's master key"
+  copy: src=master.key dest={{ app_deploy_parent_path }}/master.key
+
+- name: "make git dir"
+  become_user: "{{ app_user_name }}"
+  file:
+    path: "deployer.git"
+    state: directory
+- name: "Init repository"
+  become_user: "{{ app_user_name }}"
+  shell: >
+    git init --bare;
+  args:
+    chdir: 'deployer.git'
+
+- name: "make deploy directory"
+  become_user: "{{ app_user_name }}"
+  file:
+    path: "{{ app_deploy_parent_path }}"
+    state: directory
+- name: "Init deploy directory"
+  become_user: "{{ app_user_name }}"
+  shell: >
+    git clone ~/deployer.git {{ rails_app_root }};
+  args:
+    chdir: "{{ app_deploy_parent_path }}"
+  ignore_errors: True
+
+- name: "create hook for 'git push'"
+  become_user: "{{ app_user_name }}"
+  template:
+    src: post-receive.j2
+    dest: "/home/{{ app_user_name }}/deployer.git/hooks/post-receive"
+- name: "make executable post-reactive"
+  become_user: "{{ app_user_name }}"
+  file:
+    path: "/home/{{ app_user_name }}/deployer.git/hooks/post-receive"
+    mode: 0755
