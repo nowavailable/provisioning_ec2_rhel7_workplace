@@ -7,3 +7,7 @@ gem_version_27: "2.7.6"
 gem_27_path: "/usr/local/rvm/rubies/ruby-{{ ruby_version_25 }}/bin"
 rvm_path: "/usr/local/rvm/bin"
 passenger_version: "5.2.3"
+
+app_deploy_parent_path: "/home/appuser/app"
+# roles/deploy/files/ 以下に置かれた公開鍵ファイルの名前
+public_key_file_name: "rkjwork.pub"
