@@ -53,5 +53,5 @@
 - user:
     name: "{{ app_user_name }}"
     update_password: always
-    password: "{{ '平文パスワード'|password_hash('sha512') }}"
+    password: "{{ '{{ app_user_passwd }}'|password_hash('sha512') }}"
 

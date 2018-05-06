@@ -1,43 +1,42 @@
-- user:
-    name: "git"
-    comment: "Git User"
-- name: "Add group for git"
-  command: "/usr/sbin/usermod -a -G git {{ app_user_name }}"
-- name: "chmod git home directory"
-  become: yes
-  file:
-    path: "/home/git"
-    mode: 0750
+#- user:
+#    name: "git"
+#    comment: "Git User"
+#- name: "Add group for git"
+#  command: "/usr/sbin/usermod -a -G git {{ app_user_name }}"
+#- name: "chmod git home directory"
+#  become: yes
+#  file:
+#    path: "/home/git"
+#    mode: 0750
 - name: "mkdir .ssh"
-  become_user: git
+  become_user: "{{ app_user_name }}"
   file:
     path: ".ssh"
     state: directory
-    owner: git
     mode: 0700
-## TODO: gitユーザー の ~/.ssh/authorized_keys にも、ec2への通常sshアクセスに使用しているのと同じ公開鍵をセット。
 - name: "touch authorized_keys"
   become_user: git
   file:
     path: ".ssh/authorized_keys"
     state: touch
-    owner: git
     mode: 0600
 - name: copy publickey
-  copy: src={{ public_key_file_name }} dest=/home/git/.ssh/authorized_keys
+  copy: src={{ public_key_file_name }} dest=/home/{{ app_user_name }}/.ssh/authorized_keys
+
+- name: "copy rails-app's master key"
+  copy: src=master.key dest={{ app_deploy_parent_path }}/master.key
 
 - name: "make git dir"
-  become_user: git
+  become_user: "{{ app_user_name }}"
   file:
-    path: "deploy.git"
+    path: "deployer.git"
     state: directory
-    owner: git
 - name: "Init repository"
-  become_user: git
+  become_user: "{{ app_user_name }}"
   shell: >
     git init --bare;
   args:
-    chdir: 'deploy.git'
+    chdir: 'deployer.git'
 
 - name: "make deploy directory"
   become_user: "{{ app_user_name }}"
@@ -47,7 +46,18 @@
 - name: "Init deploy directory"
   become_user: "{{ app_user_name }}"
   shell: >
-    git clone /home/git/deploy.git deployed;
+    git clone ~/deployer.git {{ rails_app_root }};
   args:
     chdir: "{{ app_deploy_parent_path }}"
   ignore_errors: True
+
+- name: "create hook for 'git push'"
+  become_user: "{{ app_user_name }}"
+  template:
+    src: post-receive.j2
+    dest: "/home/{{ app_user_name }}/deployer.git/hooks/post-receive"
+- name: "make executable post-reactive"
+  become_user: "{{ app_user_name }}"
+  file:
+    path: "/home/{{ app_user_name }}/deployer.git/hooks/post-receive"
+    mode: 0755

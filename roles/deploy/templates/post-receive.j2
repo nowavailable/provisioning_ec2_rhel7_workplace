@@ -1,0 +1,69 @@
+#!/bin/sh
+
+#
+# copy from /etc/profile.d/rvm.sh
+#
+if
+  [ -n "${BASH_VERSION:-}" -o -n "${ZSH_VERSION:-}" ] &&
+  test "`\command \ps -p $$ -o ucomm=`" != dash &&
+  test "`\command \ps -p $$ -o ucomm=`" != sh
+then
+  [[ -n "${rvm_stored_umask:-}" ]] || export rvm_stored_umask=$(umask)
+  # Load user rvmrc configurations, if exist
+  for file in "/etc/rvmrc" "$HOME/.rvmrc"
+  do
+    [[ -s "$file" ]] && source $file
+  done
+  if
+    [[ -n "${rvm_prefix:-}" ]] &&
+    [[ -s "${rvm_prefix}/.rvmrc" ]] &&
+    [[ ! "$HOME/.rvmrc" -ef "${rvm_prefix}/.rvmrc" ]]
+  then
+    source "${rvm_prefix}/.rvmrc"
+  fi
+
+  # Load RVM if it is installed, try user then root install.
+  if
+    [[ -s "$rvm_path/scripts/rvm" ]]
+  then
+    source "$rvm_path/scripts/rvm"
+  elif
+    [[ -s "$HOME/.rvm/scripts/rvm" ]]
+  then
+    true ${rvm_path:="$HOME/.rvm"}
+    source "$HOME/.rvm/scripts/rvm"
+  elif
+    [[ -s "/usr/local/rvm/scripts/rvm" ]]
+  then
+    true ${rvm_path:="/usr/local/rvm"}
+    source "/usr/local/rvm/scripts/rvm"
+  fi
+
+  # Add $rvm_bin_path to $PATH if necessary. Make sure this is the last PATH variable change.
+  if [[ -n "${rvm_bin_path}" && ! ":${PATH}:" == *":${rvm_bin_path}:"* ]]
+  then PATH="${PATH}:${rvm_bin_path}"
+  fi
+fi
+
+#
+# copy from /usr/local/rvm/environments/ruby-{{ ruby_version_25 }}@global
+#
+export PATH="/usr/local/rvm/gems/ruby-{{ ruby_version_25 }}@global/bin:/usr/local/rvm/rubies/ruby-{{ ruby_version_25 }}/bin:$PATH"
+export GEM_HOME='/usr/local/rvm/gems/ruby-{{ ruby_version_25 }}@global'
+export GEM_PATH='/usr/local/rvm/gems/ruby-{{ ruby_version_25 }}@global'
+export MY_RUBY_HOME='/usr/local/rvm/rubies/ruby-{{ ruby_version_25 }}'
+export IRBRC='/usr/local/rvm/rubies/ruby-{{ ruby_version_25 }}/.irbrc'
+unset MAGLEV_HOME
+unset RBXOPT
+export RUBY_VERSION='ruby-{{ ruby_version_25 }}'
+
+
+(
+cp -fpr {{ app_deploy_parent_path }}/master.key {{ app_deploy_parent_path }}/{{ rails_app_root }}/config/ &&
+cd {{ app_deploy_parent_path }}/{{ rails_app_root }} &&
+rvm use ruby-{{ ruby_version_25 }} && rvm gemset use global &&
+git --git-dir=.git pull &&
+bundle install &&
+RAILS_ENV=production bundle exec rake assets:precompile
+
+)

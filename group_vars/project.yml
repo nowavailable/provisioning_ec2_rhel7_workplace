@@ -1,5 +1,6 @@
 app_user_name: "appuser"
 #admin_user_name: "admin"
+app_user_passwd: "（平文パスワード）"
 
 ruby_version_25: "2.5.1"
 rvm_25_path: "/usr/local/rvm/gems/ruby-{{ ruby_version_25 }}/bin:/usr/local/rvm/gems/ruby-{{ ruby_version_25 }}@global/bin:/usr/local/rvm/rubies/ruby-{{ ruby_version_25 }}/bin:/usr/local/rvm/bin"
@@ -9,5 +10,6 @@ rvm_path: "/usr/local/rvm/bin"
 passenger_version: "5.2.3"
 
 app_deploy_parent_path: "/home/appuser/app"
+rails_app_root: "deployed"
 # roles/deploy/files/ 以下に置かれた公開鍵ファイルの名前
 public_key_file_name: "rkjwork.pub"
