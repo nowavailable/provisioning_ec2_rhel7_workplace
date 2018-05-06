@@ -1,6 +1,5 @@
 app_user_name: "appuser"
 #admin_user_name: "admin"
-app_user_passwd: "（平文パスワード）"
 
 ruby_version_25: "2.5.1"
 rvm_25_path: "/usr/local/rvm/gems/ruby-{{ ruby_version_25 }}/bin:/usr/local/rvm/gems/ruby-{{ ruby_version_25 }}@global/bin:/usr/local/rvm/rubies/ruby-{{ ruby_version_25 }}/bin:/usr/local/rvm/bin"
