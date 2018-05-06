@@ -20,7 +20,7 @@
     - httpd-devel
     - autoconf
     - libselinux-devel
-    #- gpm-devel
+    - gpm-devel
 
 - name: bash-completion
   yum: name=bash-completion enablerepo=epel
@@ -49,9 +49,9 @@
   yum: name={{ item }} state=present
   with_items:
     - ImageMagick
-    #- ImageMagick-devel
+    - ImageMagick-devel
     - ImageMagick-c++
-    #- ImageMagick-c++-devel
+    - ImageMagick-c++-devel
 
 - name: "Install ffi"
   yum: name={{ item }} state=present
@@ -68,8 +68,8 @@
     - libxslt-devel
 - name: install libyaml
   yum: enablerepo=epel name=libyaml
-#- name: install libyaml-devel
-#  yum: enablerepo=epel name=libyaml-devel
+- name: install libyaml-devel
+  yum: enablerepo=epel name=libyaml-devel
 
 #- name: install libidn-devel
 #  yum: enablerepo=epel name=libidn-devel
@@ -92,10 +92,10 @@
   yum: name={{ item }} state=present enablerepo=epel
   with_items:
     - gd
-    #- gd-devel
+    - gd-devel
     - graphviz
-    #- graphviz-devel
-    #- graphviz-gd
+    - graphviz-devel
+    - graphviz-gd
 
 #- name: "Install poppler"
 #  yum: name={{ item }} state=present
@@ -103,11 +103,11 @@
 #    - poppler-utils
 #    - poppler-glib-devel
 
-#- name: "For FTP Batch"
-#  yum: name={{ item }} state=present
-#  with_items:
-#    - ftp
-#    # - nkf
+- name: "For ......"
+  yum: name={{ item }} state=present
+  with_items:
+    - ftp
+    - nkf
 
 #
 # MySQL
