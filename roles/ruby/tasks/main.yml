@@ -27,9 +27,19 @@
   command: "/usr/sbin/usermod -a -G rvm {{ app_user_name }}"
 
 - name: "Install ruby-{{ ruby_version_25 }}"
-  command: "/bin/bash -l -c \"rvm_rubygems_version={{ gem_version_27 }} /usr/local/rvm/bin/rvm install ruby-{{ ruby_version_25 }} --disable-binary && /usr/local/rvm/bin/rvm --default ruby-{{ ruby_version_25 }}\""
-- name: "Install bundler {{ ruby_version_25 }}"
-  #sudo: no
-  environment:
-    PATH: "{{ gem_27_path }}:{{ rvm_25_path }}:{{ ansible_env.PATH }}"
-  command: "gem install bundler --no-ri --no-rdoc"
+  become: yes
+  command: "/bin/bash -l -c \"rvm_rubygems_version={{ gem_version_27 }} /usr/local/rvm/bin/rvm reinstall ruby-{{ ruby_version_25 }} --disable-binary --with-gems=bundler,rake && /usr/local/rvm/bin/rvm --default ruby-{{ ruby_version_25 }}\""
+
+- name: "put env file"
+  become: yes
+  template:
+    src: env.j2
+    dest: "/etc/profile.d/rvm_gems.sh"
+- name: "make executable env file"
+  become: yes
+  file:
+    path: "/etc/profile.d/rvm_gems.sh"
+    mode: 0755
+
+- name: "activate env"
+  shell: bash -lc "/etc/profile.d/rvm_gems.sh"

@@ -5,28 +5,58 @@
   environment:
     PATH: "{{ ansible_env.PATH }}"
   shell: "source /etc/profile.d/rvm.sh"
+- name: "activate env"
+  shell: bash -lc "/etc/profile.d/rvm_gems.sh"
 
-- command: "which rvm"
+- name: "which rvm"
   environment:
     PATH: "{{ rvm_path }}:{{ ansible_env.PATH }}"
   register: rvm_installed
   ignore_errors: True
+  shell: >
+    which rvm
 
 - name: "rvm use ruby-{{ ruby_version_25 }}"
   environment:
     PATH: "{{ rvm_path }}:{{ ansible_env.PATH }}"
-  command: "rvm use ruby-{{ ruby_version_25 }}"
   when: rvm_installed is success
+  shell: >
+    rvm use ruby-{{ ruby_version_25 }};
+    rvm gemset use global;
 
 - name: "Install passenger"
   environment:
     PATH: "{{ gem_27_path }}:{{ rvm_path }}:{{ ansible_env.PATH }}"
-  command: "gem install passenger -v {{ passenger_version }} --no-ri --no-rdoc"
   when: rvm_installed is success
+  become: yes
+  shell: >
+    rvm gemset use global;
+    gem install passenger -v {{ passenger_version }} --no-ri --no-rdoc
 
 - name: "Install passenger apache2-module"
   environment:
     PATH: "{{ gem_27_path }}:{{ rvm_path }}:{{ ansible_env.PATH }}"
-  command: "/usr/local/rvm/gems/ruby-{{ ruby_version_25 }}@global/gems/passenger-{{ passenger_version }}//bin/passenger-install-apache2-module --auto"
+  command: "/usr/local/rvm/gems/ruby-{{ ruby_version_25 }}@global/gems/passenger-{{ passenger_version }}/bin/passenger-install-apache2-module --auto"
   when: rvm_installed is success
+  become: yes
 
+- name: "Add app-user to apache"
+  command: "/usr/sbin/usermod -a -G apache {{ app_user_name }}"
+- name: "Add apache-user to rvm group"
+  command: "/usr/sbin/usermod -a -G rvm apache"
+- name: "chmod {{ app_user_name }} home directory"
+  become: yes
+  file:
+    path: "/home/{{ app_user_name }}"
+    mode: 0755
+
+- name: "Put passenger conf"
+  become: yes
+  template:
+    src: 02-passenger.conf.j2
+    dest: "/etc/httpd/conf.modules.d/02-passenger.conf"
+- name: "Put vhosts conf"
+  become: yes
+  template:
+    src: vhosts.conf.j2
+    dest: "/etc/httpd/conf.d/vhosts.conf"

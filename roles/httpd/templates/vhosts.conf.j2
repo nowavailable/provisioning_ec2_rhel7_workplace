@@ -1,0 +1,100 @@
+<VirtualHost *:80>
+
+    ServerName rkj.taskwell.me
+    #DocumentRoot /home/appuser/app/deployed/current/public
+    DocumentRoot /home/appuser/app/deployed/public
+
+    #CustomLog "|/usr/sbin/rotatelogs -l /var/www/log/rkj.taskwell.me/access.log.%Y%m%d 86400" combined
+    #ErrorLog  "|/usr/sbin/rotatelogs -l /var/www/log/rkj.taskwell.me/error.log.%Y%m%d 86400"
+
+    #AddHandler cgi-script .cgi .pl
+
+    Header set Strict-Transport-Security "max-age=31536000; includeSubDomains"
+    Header set X-Content-Type-Options nosniff
+    Header set X-XSS-Protection "1; mode=block"
+    #Header set Content-Security-Policy "script-src 'self'  https://www.google-analytics.com http://www.google-analytics.com 'unsafe-inline'; style-src 'self' https://www.google-analytics.com http://www.google-analytics.com 'unsafe-inline'"
+
+    #<Directory /home/appuser/app/deployed/current/public>
+    <Directory /home/appuser/app/deployed/public>
+        AuthType None
+        Options FollowSymLinks
+        AllowOverride None
+        Require all granted
+    </Directory>
+
+    <Directory /home/appuser/app/deployed>
+        AuthType None
+        Options FollowSymLinks
+        PassengerAppEnv production
+        #PassengerBaseURI /
+        #PassengerAppRoot /home/appuser/app/deployed/current
+        PassengerAppRoot /home/appuser/app/deployed
+        Require all granted
+    </Directory>
+    #XSendFile on
+    #XSendFilePath /tmp/dlfiles
+
+    #<Directory /var/www/general/htdocs>
+    #    #AllowOverride AuthConfig
+    #    AllowOverride All
+    #    Options FollowSymLinks ExecCGI
+    #    DirectoryIndex index.html index.htm index.php index.cgi
+    #    ErrorDocument  404  index.html
+    #</Directory>
+
+</VirtualHost>
+
+<VirtualHost *:443>
+
+    ServerName  rkj.taskwell.me
+    #DocumentRoot /home/appuser/app/deployed/current/public
+    DocumentRoot /home/appuser/app/deployed/public
+
+    #CustomLog "|/usr/sbin/rotatelogs -l /var/www/log/rkj.taskwell.me/ssl_access.log.%Y%m%d 86400" combined
+    #ErrorLog  "|/usr/sbin/rotatelogs -l /var/www/log/rkj.taskwell.me/ssl_error.log.%Y%m%d 86400"
+
+    #AddHandler cgi-script .cgi .pl
+
+    #SSLEngine On
+    #SSLProtocol all -SSLv2 -SSLv3
+    #SSLCipherSuite ALL:!ADH:!EXPORT:!SSLv2:RC4+RSA:+HIGH:+MEDIUM:+LOW:!RC4:!DES-CBC-SHA:!EDH-RSA-DES-CBC-SHA
+    #SSLCertificateKeyFile   /etc/httpd/conf/ssl.key/2015/rkj.taskwell.me.key_2015
+    #SSLCertificateFile      /etc/httpd/conf/ssl.crt/2015/rkj.taskwell.me.crt_2015
+    #SSLCertificateChainFile /etc/httpd/conf/ssl.crt/2015/rkj.taskwell.me.ca.crt_2015
+
+    #Header set X-Content-Type-Options nosniff
+    #Header set Cache-Control "no-cache, no-store"
+    #Header set Pragma "no-cache"
+    #Header set Strict-Transport-Security "max-age=31536000; includeSubDomains"
+    #Header set X-XSS-Protection "1; mode=block"
+    #Header set Content-Security-Policy "script-src 'self' https://www.google-analytics.com https://webfont.fontplus.jp https://connect.facebook.net https://platform.twitter.com https://www.googleadservices.com 'unsafe-inline'; style-src 'self'  https://www.google-analytics.com"
+
+    #<Directory /home/appuser/app/deployed/current/public>
+    <Directory /home/appuser/app/deployed/public>
+        AuthType None
+        Options FollowSymLinks
+        AllowOverride None
+        Require all granted
+    </Directory>
+
+    <Directory /home/appuser/app/deployed>
+        AuthType None
+        Options FollowSymLinks
+        PassengerAppEnv production
+        #PassengerBaseURI /
+        #PassengerAppRoot /home/appuser/app/deployed/current
+        PassengerAppRoot /home/appuser/app/deployed
+        Require all granted
+    </Directory>
+    #XSendFile on
+    #XSendFilePath /tmp/dlfiles
+
+    #<Directory /var/www/general/htdocs>
+    #    #AllowOverride AuthConfig
+    #    AllowOverride All
+    #    Options FollowSymLinks ExecCGI
+    #    DirectoryIndex index.html index.htm index.php index.cgi
+    #    ErrorDocument  404  index.html
+    #</Directory>
+
+</VirtualHost>
