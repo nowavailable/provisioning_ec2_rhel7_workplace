@@ -1,13 +1,3 @@
-#- user:
-#    name: "git"
-#    comment: "Git User"
-#- name: "Add group for git"
-#  command: "/usr/sbin/usermod -a -G git {{ app_user_name }}"
-#- name: "chmod git home directory"
-#  become: yes
-#  file:
-#    path: "/home/git"
-#    mode: 0750
 - name: "mkdir .ssh"
   become_user: "{{ app_user_name }}"
   file:
