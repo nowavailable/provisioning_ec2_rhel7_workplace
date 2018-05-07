@@ -63,7 +63,8 @@ cp -fpr {{ app_deploy_parent_path }}/master.key {{ app_deploy_parent_path }}/{{ 
 cd {{ app_deploy_parent_path }}/{{ rails_app_root }} &&
 rvm use ruby-{{ ruby_version_25 }} && rvm gemset use global &&
 git --git-dir=.git pull &&
-bundle install &&
-RAILS_ENV=production bundle exec rake assets:precompile
-
+rvmsudo bundle install &&
+RAILS_ENV=production bundle exec rake db:migrate &&
+RAILS_ENV=production bundle exec rake assets:precompile &&
+spring stop && touch ./tmp/restart.txt
 )
