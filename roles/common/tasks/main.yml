@@ -55,3 +55,8 @@
     update_password: always
     password: "{{ '平文パスワード'|password_hash('sha512') }}"
 
+- name: "create sudoers"
+  become: yes
+  template:
+    src: 91-ansible-users.j2
+    dest: "/etc/sudoers.d/91-ansible-users"
